@@ -1,3 +1,4 @@
+import sys
 from circleshape import *
 from constants import *
 from shot import Shot
@@ -6,8 +7,9 @@ from shot import Shot
 class Player(CircleShape):
     def __init__(self, x,y,radius=PLAYER_RADIUS*0.5): #0.5 to fix hitbox, it was too big
         super().__init__(x,y,radius)
-        self.rotation = 0
+        self.rotation = 180 #Pointing UP
         self.shot_timer = 0
+        self.exit = False
     
     def draw(self,screen):
         pygame.draw.polygon(screen,"white",self.triangle(), width=2)     
@@ -21,9 +23,9 @@ class Player(CircleShape):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
-            self.rotate(-dt)
-        if keys[pygame.K_d]:
             self.rotate(dt)
+        if keys[pygame.K_d]:
+            self.rotate(-dt)
 
         if keys[pygame.K_w]:
             self.move(dt)
@@ -32,6 +34,9 @@ class Player(CircleShape):
 
         if keys[pygame.K_SPACE]:
             self.shoot()
+
+        if keys[pygame.K_ESCAPE]: 
+            self.exit = True
 
     def move(self,dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
